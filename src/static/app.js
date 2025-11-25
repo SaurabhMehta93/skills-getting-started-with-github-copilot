@@ -20,11 +20,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // Build participants section HTML
+        let participantsHtml = "";
+        if (Array.isArray(details.participants) && details.participants.length > 0) {
+          const items = details.participants
+            .map((p) => {
+              // support simple string entries or objects with name/email
+              if (typeof p === "string") return `<li class="participant-item"><span class="participant-avatar" aria-hidden="true"></span>${p}</li>`;
+              const label = p.name || p.email || JSON.stringify(p);
+              return `<li class="participant-item"><span class="participant-avatar" aria-hidden="true"></span>${label}</li>`;
+            })
+            .join("");
+
+          participantsHtml = `<ul class="participants-list" aria-label="Participants">${items}</ul>`;
+        } else {
+          participantsHtml = `<p class="no-participants">No participants yet — be the first!</p>`;
+        }
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <div class="participants-section">
+            <h5>Participants</h5>
+            ${participantsHtml}
+          </div>
         `;
 
         activitiesList.appendChild(activityCard);
