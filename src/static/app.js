@@ -24,11 +24,15 @@ document.addEventListener("DOMContentLoaded", () => {
         let participantsHtml = "";
         if (Array.isArray(details.participants) && details.participants.length > 0) {
           const items = details.participants
-            .map((p) => {
-              // support simple string entries or objects with name/email
-              if (typeof p === "string") return `<li class="participant-item"><span class="participant-avatar" aria-hidden="true"></span>${p}</li>`;
-              const label = p.name || p.email || JSON.stringify(p);
-              return `<li class="participant-item"><span class="participant-avatar" aria-hidden="true"></span>${label}</li>`;
+              .map((p) => {
+                // support simple string entries or objects with name/email
+                if (typeof p === "string") {
+                  // Add a delete button and dataset attributes we can use later
+                  return `<li class="participant-item" data-email="${p}" data-activity="${encodeURIComponent(name)}"><span class="participant-avatar" aria-hidden="true"></span>${p}<button class="participant-delete" aria-label="Unregister ${p}">✖</button></li>`;
+                }
+                const label = p.name || p.email || JSON.stringify(p);
+                const email = p.email || label;
+                return `<li class="participant-item" data-email="${email}" data-activity="${encodeURIComponent(name)}"><span class="participant-avatar" aria-hidden="true"></span>${label}<button class="participant-delete" aria-label="Unregister ${label}">✖</button></li>`;
             })
             .join("");
 
@@ -49,6 +53,49 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         activitiesList.appendChild(activityCard);
+
+        // Attach click handlers for unregister/delete buttons inside this activity card
+        activityCard.querySelectorAll(".participant-delete").forEach((btn) => {
+          btn.addEventListener("click", async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const li = btn.closest(".participant-item");
+            if (!li) return;
+            const email = li.dataset.email;
+            // activity name is encoded in data-attribute to match server routing
+            const activityNameEncoded = li.dataset.activity || encodeURIComponent(name);
+            const activityName = decodeURIComponent(activityNameEncoded);
+
+            if (!confirm(`Unregister ${email} from ${activityName}?`)) return;
+
+            try {
+              const response = await fetch(
+                `/activities/${encodeURIComponent(activityName)}/participants?email=${encodeURIComponent(email)}`,
+                { method: "DELETE" }
+              );
+
+              const result = await response.json();
+
+              if (response.ok) {
+                messageDiv.textContent = result.message;
+                messageDiv.className = "success";
+                // refresh activities list
+                fetchActivities();
+              } else {
+                messageDiv.textContent = result.detail || "Failed to unregister participant";
+                messageDiv.className = "error";
+              }
+            } catch (err) {
+              messageDiv.textContent = "Failed to unregister participant — try again.";
+              messageDiv.className = "error";
+              console.error("Error unregistering participant:", err);
+            }
+
+            messageDiv.classList.remove("hidden");
+            setTimeout(() => messageDiv.classList.add("hidden"), 5000);
+          });
+        });
 
         // Add option to select dropdown
         const option = document.createElement("option");

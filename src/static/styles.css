@@ -190,6 +190,29 @@ footer {
   flex: 0 0 10px;
 }
 
+/* delete/unregister icon next to participant */
+.activity-card .participant-delete {
+  background: transparent;
+  border: none;
+  color: #c62828; /* red */
+  cursor: pointer;
+  margin-left: 8px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.activity-card .participant-delete:hover {
+  background: rgba(198, 40, 40, 0.08);
+  color: #b71c1c;
+}
+
 /* empty state */
 .activity-card .no-participants {
   color: #777;
