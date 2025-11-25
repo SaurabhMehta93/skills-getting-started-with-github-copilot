@@ -142,3 +142,80 @@ footer {
   padding: 20px;
   color: #666;
 }
+
+/* Participants section inside activity cards */
+.activity-card .participants-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #eee;
+}
+
+.activity-card .participants-section h5 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Bulleted list styles — visually light and compact */
+.activity-card .participants-list {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.activity-card .participant-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: linear-gradient(90deg, #f1f6ff, #ffffff);
+  border: 1px solid #e1e8ff;
+  border-radius: 999px;
+  font-size: 13px;
+  color: #1a237e;
+  box-shadow: 0 1px 0 rgba(26,35,126,0.06);
+}
+
+/* small avatar dot */
+.activity-card .participant-avatar {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3949ab;
+  flex: 0 0 10px;
+}
+
+/* delete/unregister icon next to participant */
+.activity-card .participant-delete {
+  background: transparent;
+  border: none;
+  color: #c62828; /* red */
+  cursor: pointer;
+  margin-left: 8px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.activity-card .participant-delete:hover {
+  background: rgba(198, 40, 40, 0.08);
+  color: #b71c1c;
+}
+
+/* empty state */
+.activity-card .no-participants {
+  color: #777;
+  font-size: 13px;
+  padding: 6px 0;
+}
